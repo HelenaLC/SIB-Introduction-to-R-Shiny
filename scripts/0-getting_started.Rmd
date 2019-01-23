@@ -1,0 +1,49 @@
+---
+title: "(0) Getting started"
+output: html_document
+runtime: shiny
+---
+
+To create a Shiny app from scratch, navigate to **File** -> **New File**, and select **Shiny Web App...**
+
+All Shiny apps have three components:
+
+1) The **user interface (UI)** sets the layout/appearance of the app.
+2) The **server function** contains instructions needed to build the app.
+3) Finally, a call to the `shinyApp()` function creates the app from the input server/UI pair.
+
+### Organizing your code
+
+A Shiny app can be written in two ways. By default, RStudio will generate a single `app.R` file that contains all of the components mentioned above. In this case, all required libraries must be loaded and scripts must be sourced inside of the `server()` function.
+
+```{r eval = FALSE}
+# app.R
+library(shiny)
+
+ui <- fluidPage(plotOutput(outputId = "histogram"))
+
+server <- function(input, output)
+    output$histogram <- renderPlot(hist(cars$speed))
+
+shinyApp(ui = ui, server = server)
+```
+
+Alternatively, the app can be organized into separate `ui.R` and `server.R` files. An additional `global.R` file can then be used to load libraries and additional scripts. 
+
+```{r eval = FALSE}
+# dir/ui.R
+fluidPage(plotOutput(outputId = "histogram"))
+
+# dir/server.R
+shinyServer(function(input, output)
+    output$histogram <- renderPlot(hist(cars$speed))
+
+# dir/global.R
+library(shiny)
+    
+# click on 'Run App' in RStudio run the app via
+runApp("dir")
+```
+
+Both of the above examples will render the same result. However, for larger projects, it is recommended to resolve to the second option. 
+

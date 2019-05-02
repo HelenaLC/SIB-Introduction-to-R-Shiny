@@ -1,6 +1,7 @@
 # SIB - Introduction to R Shiny
-**Instructors: Phil Cheng & Helena Crowell**  
-**Date: May 9th, 2019**
+**Who: Phil Cheng & Helena Crowell**  
+**When: May 9th, 2019; 9:00-17:00**  
+**Where: University of Zurich, Campus Irchel; seminar room Y32-E-06**
 
 ### Install required packages
 

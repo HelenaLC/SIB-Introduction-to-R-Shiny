@@ -1,41 +1,73 @@
-# SIB Introductory course to R Shiny
-**date, Zurich - taught by Phil Cheng & Helena Crowell**
+# SIB - Introduction to R Shiny
+**Instructors: Phil Cheng & Helena Crowell**  
+**Date: May 9th, 2019**
 
+### Install required packages
 
-### Objectives
+You will require only the few following R packages, and we kindly ask you to assure they are installed using the following commands:
 
-...
+```
+pkgs <- c("shiny", "dplyr", "DT", "ggplot2")
+pkgs <- setdiff(pkgs, rownames(installed.packages()))
+if (length(pkgs) != 0) install.packages(pkgs)
+```
 
-### Contents
+### Download course material
 
-* Inputs & outputs
-    * fileInput, textInput, numericInput, selectInput, actionButton
-    * textOutput, plotOutput, tableOutput, dataTableOutput
-  
-* Layouts & styling
-    * [`shinydashboard`](https://rstudio.github.io/shinydashboard) for dashboard layouts
-    * [`shinyBS`](https://ebailey78.github.io/shinyBS) for Bootstrap components
+At the moment, this repository contains everything we'll require for Monday (data sets, script skeletons). We will upload all presented material (scripts, slides, and solutions) here after the course.
 
-* Rendering 
-    * `renderX()` to generate outputs
-    * `reactive()`, `eventReactive()` (example button click)
-    
-* Some advances stuff
-    * brushing points
-    * `DT` table selection
+If you're familiar with GitHub, you can clone this repository to your local machine via
+```
+git clone https://github.com/HelenaLC/SIB-Shiny-intro.git
+```
 
-### Data
+Alternatively, you can download the repository by clicking on **Clone or download** > **Download ZIP**.
 
-- The **Affairs dataset** from 1978 contains information about politicians having affairs. The goal of the dataset is to find characteristics that make it more plausable for a politician to have an affair. Does the number of children matter? How religious the politician is? Or education/marriage rating?  
-*[reference: Fair, R. (1977) “A note on the computation of the tobit estimator”, Econometrica, **45**, 1723-1727]*
+### Important notes
 
-- **Movies data set** originates from a forum where users collect on-screen body counts for a selection of films and the characters and actors who appear in these films. To be counted a kill and/or dead body has to be visible on the screen, implied deaths like those died in the explosion of the Death Star are not counted. The dataset currently contains counts for 545 films from 1949 to 2013.  
-*[source: http://www.moviebodycounts.com]*
+- For collaborative note-taking, we have set up an **Etherpad** [here](http://bit.ly/2vrl4pr) where you can share snippets of code, feedback, or questions at any time during the course. We hope to discuss issues that arise here *on the fly*, and that this will encourage live-discussion / feedback by breaking the barrier of having to raise your hand ;)
 
-### Resources
+- Before lunch time, we will hand out <span style = "display:inline-block; color:red"> red </span> and <span style = "display:inline-block; color:green"> green </span> **sticky notes**. Please take a minute to write one positive thing on the <span style = "display:inline-block; color:green"> green </span> sticky note (e.g., something useful you've learned or something you liked about the teaching-style), and something you found too fast /  too slow / confusing / irrelevant, or questions that haven't yet been answered on the <span style = "display:inline-block; color:red"> red </span> one.
 
-* Both video and written tutorials are available at https://shiny.rstudio.com/tutorial.
+***
 
-### Examples
+## Overview
 
-* An impressive example of what is possible with Shiny is [iSEE](https://bioconductor.org/packages/release/bioc/html/iSEE.html).
+Shiny is an open-source R package that allows building interactive web applications from R, and without knowledge of web-development, enabling data scientists to make their data or analysis interactively explorable and accessible to colleagues, end-users, and/or for publication.
+
+In this course, we will introduce the R Shiny framework, and equip R programmers with the basic tools to build and deploy their own web apps.
+
+# Audience
+
+Biologists, bioinformaticians, and any R users who are interested in developing an interactive web application to communicate their data or analysis to other non-programmers.
+
+# Learning objectives
+
+Upon completion of this course, attendees should have become familiar with:
+
+- The general Shiny framework structure (server and UI).
+- Basic Shiny building blocks (input and output widgets).
+- An overview of UI layouts and how to “prettify” apps.
+- The concepts of reactivity and reactive values (interactive vs. static).
+- How to share their apps privately or deploy them publicly.
+
+# Prerequisites
+
+*Knowledge / competencies*
+
+- Intermediate to advanced knowledge of R.
+- No prior experience with Shiny is expected.
+
+*Technical*
+
+- You are required to bring your personal laptop with WIFI connection enabled and the latest versions of R and RStudio installed.
+
+# Venue & Time
+
+- University of Zurich, Campus Irchel
+- May 6th, 2019, 9:00 - 17:00
+
+# Instructors
+
+- Phil Cheng, University Hospital Zurich, Levesque group (author of the [TCGA Browser](http://tcgabrowser.ethz.ch:3838/PROD))
+- Helena L. Crowell, PhD student, Robinson group, UZH (author of the [CATALYST package and CATALYSTLite](http://catalyst-project.github.io/))

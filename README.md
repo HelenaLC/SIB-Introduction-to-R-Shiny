@@ -27,7 +27,7 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
 
 - For collaborative note-taking, we have set up an **Etherpad** [here](http://bit.ly/2vrl4pr) where you can share snippets of code, feedback, or questions at any time during the course. We hope to discuss issues that arise here *on the fly*, and that this will encourage live-discussion / feedback by breaking the barrier of having to raise your hand ;)
 
-- Before lunch time, we will hand out <span style = "display:inline-block; color:red"> red </span> and <span style = "display:inline-block; color:green"> green </span> **sticky notes**. Please take a minute to write one positive thing on the <span style = "display:inline-block; color:green"> green </span> sticky note (e.g., something useful you've learned or something you liked about the teaching-style), and something you found too fast /  too slow / confusing / irrelevant, or questions that haven't yet been answered on the <span style = "display:inline-block; color:red"> red </span> one.
+- Before lunch time, we will hand out red and green **sticky notes**. Please take a minute to write one positive thing on the green sticky note (e.g., something useful you've learned or something you liked about the teaching-style), and something you found too fast /  too slow / confusing / irrelevant, or questions that haven't yet been answered on the red one.
 
 ***
 

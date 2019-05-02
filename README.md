@@ -64,8 +64,9 @@ Upon completion of this course, attendees should have become familiar with:
 
 # Venue & Time
 
-- University of Zurich, Campus Irchel
-- May 6th, 2019, 9:00 - 17:00
+- University of Zurich, Campus Irchel:  
+seminar room Y32-E-06
+- May 6th, 2019: 9:00 - 17:00
 
 # Instructors
 

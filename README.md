@@ -34,10 +34,7 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
 
 #### Contents
 
-`scripts/...`  
-
-<div class = "row">
-<div class = "col-md-4">
+`scripts/...`
 
 - `0-introduction.Rmd`:  
     - what is Shiny?
@@ -50,11 +47,7 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
     - 1st taskset with solutions
 - `2-moreshiny.Rmd`:  
     - more reactivity
-    - `tabsetPanel`s  
-
-</div>
-<div class = "col-md-4">  
-
+    - `tabsetPanel`s
 - `3-moviesapp.Rmd`:  
     - continuation of movies app
     - 2nd taskset with solutions
@@ -62,15 +55,12 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
     - debugging, Shiny `reactlog`
     - app sharing & deployment
 
-`exercises/...`  
+`exercises/...` 
 
 - `movies2.1_actionButton.R`,  
   `movies2.1_tabsetPanel.R`,  
   `movies2.1_final.R`:  
     - solutions to app examples from `scripts/2-moreshiny.Rmd`
-
-</div>
-</div>
 
 #### Instructions
 

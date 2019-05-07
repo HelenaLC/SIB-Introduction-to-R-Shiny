@@ -1,0 +1,112 @@
+---
+title: "Deployment, debugging, resources"
+subtitle: "SIB - Introduction to R Shiny"
+author: "Phil Cheng, Helena L. Crowell"
+date: "May 6th, 2019"
+output: 
+    learnr::tutorial:
+    progressive: true
+theme: flatly
+runtime: shiny_prerendered
+---
+ 
+```{r echo = FALSE}
+learnr::initialize_tutorial()
+```
+
+## Debugging
+
+### Reactivity log
+
+- interactive browser to visualize  
+reactive dependenvies & execution
+
+- can be displayed during...
+
+```{r eval = FALSE}
+shinyApp(ui, server)
+# ctrl/command + F3 (win/mac)
+```
+
+- ...or prior to app launch
+
+```{r eval = FALSE}
+reactlogShow()
+shinyApp(ui, server)
+```
+
+## Deployment/sharing
+
+2 basic options:
+
+1. **R script(s)**:
+    - simplest way
+    - user has to have R (and know how to use it)
+
+2. **web page**:
+    - most user friendly (navigation to app via web brower)
+    - need a server
+
+### 1. Sharing as R script(s)
+
+- as R script(s) (what we've seen so far)
+```{r eval = FALSE}
+# single file:
+runApp("<path_to_app.R>")
+
+# multiple files:
+runApp("<path_to_server.R>")
+```
+
+- as a stand-alone package
+```{r eval = FALSE}
+library(package)
+launch_app()
+```
+
+### 2. Sharing as a web page
+
+- via hosting a [Shiny server](https://github.com/rstudio/shiny-server/blob/master/README.md)
+- via RStudio's [shinyapps.io](http://www.shinyapps.io/)  
+(free with limited # of apps & active hours; can pay for more)
+- ...
+
+## Final task
+
+- visit https://www.shinyapps.io
+- click on **Sign Up** to create an account
+- follow the **GETTING STARTED** instructions
+- complete the skeleton script at `<script_name>`
+- upload your app to your shinyapps.io account
+- share the link to your app with us on the Etherpad
+
+### Data description
+
+- **affairs.csv** contains data from 601 men and women from the US  
+who were asked how many (if any) affairs they've had in their marriage,  
+along with additional questions about their personna
+- The dataset contains the following variables:
+
+variable | description        | type
+:--------|:-------------------|:-----------
+`sex`    | male or female     | categorical
+`age`    | 17.5-57            | continuous
+`ym`     | # of years married | continuous
+`child`  | yes or no          | categorical
+`religious`  | 1 (not) - 5 (very)  | categorical
+`education`  | 9 (low) - 20 (high) | categorical
+`occupation` | 1 - 7 (hollingshead classification) | categorical
+`rate` | marriage self-rating; 1 (very unhappy) - 5 (very happy) | categorical
+`nbaffairs` | # of affairs in the past year | continuous
+
+### What needs to be in your Shiny app
+
+- Create a Shiny app which has a sidebar that allows for 4 inputs
+- The Shiny app should have 2 tabs in the mainPanel
+- The first input should only select for catergorical columns (sex, child, religious, education, occupation, rate)
+- The second input should only select for continuous columns (age, ym, nbaffairs)
+- The third input will be a updateselectizeInput for the levels in the category from input1
+- The fourth input will be a updateSliderInput for input2.
+- Use observeEvent to allow for the input 3 and 4 update depending on your choices of input 1 and 2
+- The first tab should have a boxplot of input1 vs input2
+- The second tab should have a radioInput for "t-test" and "ANOVA"  and will output the text from `t.test`or `anova`

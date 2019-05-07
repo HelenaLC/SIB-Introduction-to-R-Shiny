@@ -1,0 +1,634 @@
+---
+title: "Introduction"
+subtitle: "SIB - Introduction to R Shiny"
+author: "Phil Cheng, Helena L. Crowell"
+date: "May 6th, 2019"
+output: 
+  learnr::tutorial:
+    progressive: true
+    theme: flatly
+runtime: shiny_prerendered
+---
+
+```{r echo = FALSE}
+learnr::initialize_tutorial()
+```
+
+## Agenda
+
+- introduction
+  - what is Shiny?
+  - app organization
+  - input & output widgets
+  - layouts overview
+  - reactivity
+- ...**coffee**...
+- exercise session 1
+  - step-by-step app building
+- ...**lunch**...
+- beyond intro
+  - advanced reactivity
+  - more layouting
+- ...**coffee**...
+- exercise session 2
+  - continuation of 1st app
+- conclusion
+  - debugging
+  - deployment
+- final task
+
+## What is Shiny? 
+
+A **Shiny** app is a web page (**UI**) connected to a computer  
+running a live R session (**Server**).
+
+Manipulating the UI causes the server to update  
+the UI's displays (by running R code!).
+
+![](images/0-fig1.png){width="100%"}
+
+## Anatomy
+
+All Shiny apps have 3 components:
+
+1. The **user interface (UI)** sets the layout/appearance.
+2. The **server function** gives instructions to build the app.
+3. Finally, a call to `shinyApp()` creates the app  
+from the input UI-server pair.
+
+```{r eval = FALSE}
+# minimal example
+library(shiny)
+ui <- fluidPage(...)
+server <- function(input, output) {...}
+shinyApp(ui = ui, server = server)
+```
+
+## Organizing your app
+
+**A Shiny app can be written in two ways.**
+
+### 1. Single-file app
+
+- single `app.R` file that contains all components  
+> libraries & helper scripts must be loaded in the preamble
+
+```{r eval = FALSE}
+# app.R
+library(shiny)
+library(...)
+source(...)
+
+ui <- fluidPage(...)
+server <- function(input, output) {...}
+shinyApp(ui = ui, server = server)
+```
+
+### 2. Multi-file app
+
+- separate `ui.R` and `server.R` files  
+> `global.R` file *can* be used to load libraries & helper scripts 
+
+```{r eval = FALSE}
+# dir/ui.R
+fluidPage(...)
+
+# dir/server.R
+shinyServer(function(input, output) {...}
+
+# dir/global.R
+library(shiny)
+library(...)
+source(...)
+    
+# click on 'Run App' in RStudio or run the app via
+runApp("dir")
+```
+
+## Basic layouts 
+
+### `fluidPage`
+
+- automatically adjusts to window dimensions (width 12)
+- consists of `fluidRow`s and `column`s
+
+```{r eval = FALSE}
+fluidPage(
+  fluidRow(...),
+  fluidRow(
+    column(width = 6, ...),
+    column(width = 6, ...)),
+  fluidRow(
+    column(width = 4, ...),
+    column(width = 4, ...),
+    column(width = 4, ...)))
+```
+
+```{r echo = FALSE}
+fluidPage(
+  fluidRow(style = "height:20px; border:1px solid white; background-color:blue"),
+    fluidRow(
+      column(width = 6, style = "height:20px; border:1px solid white;  background-color:red"),
+      column(width = 6, style = "height:20px; border:1px solid white;  background-color:gold")),
+    fluidRow(
+      column(width = 4, style = "height:20px; border:1px solid white;  background-color:orange"),
+      column(width = 4, style = "height:20px; border:1px solid white;  background-color:green"),
+      column(width = 4, style = "height:20px; border:1px solid white;  background-color:purple")))
+```
+
+### `sidebarLayout`
+
+- consists of a `mainPanel` & `sidebarPanel`
+- placed **inside** a `fluidPage`
+
+```{r}
+fluidPage(
+    sidebarLayout(
+        sidebarPanel("sidebar panel"),
+        mainPanel("main panel")))
+```
+
+### `dashboardPage`
+
+- from the `shinydashboards` package
+- consists of a header, body, and sidebar
+- probably the most commonly used layout option
+
+```{r eval = FALSE}
+library(shinydashboard)
+dashboardPage(
+    header = dashboardHeader(
+        title = "Dashboard example"),
+    sidebar = dashboardSidebar(
+        sidebarMenu(
+            menuItem(tabName = "tab1", text = "1st menu item", icon = icon("fish")),
+            menuItem(tabName = "tab2", text = "2nd menu item", icon = icon("gear"),
+                 menuItem(tabName = "sub1", text = "sub-item")))),
+    body = dashboardBody(
+        tabItems(
+            tabItem("tab1", "content of 1st menu item"),
+            tabItem("sub1", "content of sub-item"))),
+    skin = "red")
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(shinydashboard)
+div(style = "height:250px;overflow:hidden",
+dashboardPage(
+    header = dashboardHeader(
+        title = "Dashboard example"),
+    sidebar = dashboardSidebar(
+        sidebarMenu(
+            menuItem(tabName = "tab1", text = "1st menu item", icon = icon("fish")),
+            menuItem(tabName = "tab2", text = "2nd menu item", icon = icon("gear"),
+                 menuItem(tabName = "sub1", text = "sub-item")))),
+    body = dashboardBody(
+        tabItems(
+            tabItem("tab1", "content of 1st menu item"),
+            tabItem("sub1", "content of sub-item"))),
+    skin = "red")
+)
+```
+
+### `shinyBS`
+
+- easy Bootstrap components for Shiny
+- pretty buttons, hovering text, collapsable UI element, button toggle-ing...
+
+```{r eval = FALSE}
+bsButton(inputId = "...", label = "...", style = ...)
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(shinyBS)
+fluidRow(
+    bsButton("id1", label = "default", style = "default"),
+    bsButton("id2", label = "primary", style = "primary"),
+    bsButton("id3", label = "success", style = "success"),
+    bsButton("id4", label = "info",    style = "info"   ),
+    bsButton("id5", label = "warning", style = "warning"),
+    bsButton("id6", label = "danger",  style = "danger" ))
+```
+
+### &nbsp;
+
+```{r results = 'hold'}
+bsButton(inputId = "id", label = "Touch me")
+bsTooltip(id = "id", trigger = "hover", title = "Gotcha!")
+```
+
+### CSS styling
+
+```{r}
+actionButton(
+    inputId = "down", label = "Download", icon = icon("download"),
+    style = "background-color:green; color:white; width: 100px")
+```
+
+### &nbsp;
+
+```{r}
+fluidRow(
+    tags$style(HTML('#save{background-color:black; color:white; width: 100px}')),
+    actionButton(inputId = "save", label = "Save", icon = icon("save")))
+```
+
+## Widgets
+
+- shiny fixes 2 **list** variables: `input` & `output`  
+that store any inputs/outputs declared in the UI
+- each input/output element must be initialized with a unique ID,  
+and can be accessed like a regular list element:
+  - `*input(inputId = "id", ...)` > `input$id`/`input[["id"]]`
+  - `*output(outputId = "id", ...)` > `output$id`/`output[["id"]]`
+
+&nbsp;
+
+![](images/0-fig2.png?display=inline-block){width="50%"}![](images/0-fig3.png?display=inline-block){width="50%"}
+
+*** 
+
+![](images/0-fig4.png){width="100%"}
+
+
+## Reactivity basics
+
+### &nbsp;
+
+- reactive values & functions are **lazy**:  
+they evaluate *only* when their inputs change.
+
+### &nbsp;
+
+- reactive values work together with reactive functions:
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+# ui
+numericInput(
+    inputId = "n", 
+    label = "Enter a number:", 
+    value = 5)
+
+plotOutput(
+    outputId = "hist",
+    height = "250px")
+
+# server
+output$hist <- renderPlot({
+    m <- input$n
+    x <- rnorm(n = 100, mean = m)
+    hist(x)
+})
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+# ui
+numericInput(
+    inputId = "n", 
+    label = "Enter a number:", 
+    value = 5)
+
+plotOutput(
+    outputId = "hist",
+    height = "250px")
+```
+
+```{r context = "server"}
+# server
+output$hist <- renderPlot({
+    m <- input$n
+    x <- rnorm(n = 100, mean = m)
+    hist(x)
+})
+```
+</div>
+</div>
+
+### &nbsp;
+
+- a reactive function without a reactive value does **not** work!
+
+```{r eval = FALSE}
+x <- input$x
+output$x <- renderText(x)
+```
+<span style="color:red">Error: Operation not allowed without an active reactive context.</span>
+
+### &nbsp;
+
+- `reactive()` creates a reactive expression:
+
+<div class = "row">
+<div class = "col-md-9">
+```{r eval = FALSE}
+# ui
+numericInput(inputId = "number", label = NULL, value = 5)
+textOutput(outputId = "square")
+
+# server
+n <- reactive(input$number)        # this is a function...
+output$square <- renderText(n()^2) # has to be called like one!
+```
+</div>
+<div class = "col-md-3">
+```{r results = "hold", echo = FALSE}
+numericInput(inputId = "number", label = NULL, value = 5)
+textOutput(outputId = "square")
+```
+
+```{r context = "server"}
+n <- reactive(input$number)        # this is a function...
+output$square <- renderText(n()^2) # has to be called like one!
+```
+</div>
+</div>
+
+### Example 1
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+library(shiny)
+
+ui <- fluidPage(
+    numericInput(
+        inputId = "mean",
+        label = "Enter distribution mean:",
+        value = 5),
+    plotOutput(
+        outputId = "hist"))
+
+server <- function(input, output) { 
+    output$hist <- renderPlot({
+        x <- rnorm(n = 1000, mean = input$mean)
+        hist(x)
+    })
+}
+
+shinyApp(ui = ui, server = server)
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+numericInput("mean1", "Enter distribution mean:", value = 5)
+plotOutput("ex1")
+```
+```{r context = "server"}
+output$ex1 <- renderPlot(hist(rnorm(1e3, input$mean1)))
+```
+</div>
+</div>
+
+### Example 2
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+library(shiny)
+
+ui <- fluidPage(
+    numericInput(
+        inputId = "mean",
+        label = "Enter distribution mean:",
+        value = 5),
+    selectInput(
+        inputId = "color",
+        label = "Pick a color:",
+        choices = colors()),
+    plotOutput(
+        outputId = "hist"))
+
+server <- function(input, output) { 
+    output$hist <- renderPlot({
+        x <- rnorm(n = 1000, mean = input$mean)
+        hist(x, col = input$color)
+    })
+}
+
+shinyApp(ui = ui, server = server)
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+numericInput("mean2", "Enter distribution mean:", value = 5)
+selectInput("col1", "Pick a color:", choices = colors())
+plotOutput("ex2")
+```
+```{r context = "server"}
+output$ex2 <- renderPlot(hist(rnorm(1e3, input$mean2), col = input$col1))
+```
+</div>
+</div>
+
+### Example 3
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+library(shiny)
+
+ui <- fluidPage(
+    numericInput(
+        inputId = "mean",
+        label = "Enter distribution mean:",
+        value = 5),
+    selectInput(
+        inputId = "color",
+        label = "Pick a color:",
+        choices = colors()),
+    actionButton(
+        inputId = "go",
+        label = "Go!"),
+    plotOutput(
+        outputId = "hist"))
+
+server <- function(input, output) { 
+    observeEvent(input$go, {
+        x <- rnorm(n = 1000, mean = input$mean)
+        h <- hist(x, col = input$color)
+        output$hist <- renderPlot(h)
+    })
+}
+
+shinyApp(ui = ui, server = server)
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+numericInput("mean3", "Enter distribution mean:", value = 5)
+selectInput("col2", "Pick a color:", choices = colors())
+actionButton("go1", "Go!")
+plotOutput("ex3")
+```
+```{r context = "server"}
+observeEvent(input$go1, output$ex3 <- renderPlot(
+    hist(rnorm(1e3, input$mean3), col = input$col2)))
+```
+</div>
+</div>
+
+### Example 4
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+library(shiny)
+
+ui <- fluidPage(
+    numericInput(
+        inputId = "mean",
+        label = "Enter distribution mean:",
+        value = 5),
+    selectInput(
+        inputId = "color",
+        label = "Pick a color:",
+        choices = colors()),
+    actionButton(
+        inputId = "go",
+        label = "Go!"),
+    plotOutput(
+        outputId = "hist"))
+
+server <- function(input, output) { 
+    
+    plot <- eventReactive(input$go, {
+        x <- rnorm(n = 1000, mean = input$mean)
+        hist(x, col = input$color)
+    })
+
+    output$hist <- renderPlot(plot())
+}
+
+shinyApp(ui = ui, server = server)
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+numericInput("mean4", "Enter distribution mean:", value = 5)
+selectInput("col3", "Pick a color:", choices = colors())
+actionButton("go2", "Go!")
+plotOutput("ex4")
+```
+```{r context = "server"}
+p <- eventReactive(input$go2, hist(rnorm(1e3, input$mean4), col = input$col3))
+output$ex4 <- renderPlot(p())
+```
+</div>
+</div>
+
+### `req()`
+
+- ensures that *required* values are available  
+before proceeding with a calculation or action
+
+- operations are stopped **silently**  
+(without rasing an error)
+
+### Example 1
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+# ui
+numericInput(
+    inputId = "n", 
+    label = "Enter a number:", 
+    value = 10)
+plotOutput(
+    outputId = "log")
+
+# server
+output$log <- renderPlot({
+    x <- seq(0, input$n, length = 100)
+    plot(x, log(x))
+})
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+numericInput(inputId = "n2", label = "Enter a number:", value = 10)
+plotOutput(outputId = "log1")
+```
+```{r context = "server"}
+output$log1 <- renderPlot({
+    x <- seq(0, input$n2, length = 100)
+    plot(x, log(x))
+})
+```
+</div>
+</div>
+
+### &nbsp;
+
+<div class = "row">
+<div class = "col-md-6">
+```{r eval = FALSE}
+# ui
+numericInput(
+    inputId = "n", 
+    label = "Enter a number:", 
+    value = 10)
+plotOutput(
+    outputId = "log")
+
+# server
+output$log <- renderPlot({
+    req(input$n > 0)
+    x <- seq(0, input$n, length = 100)
+    plot(x, log(x))
+})
+```
+</div>
+<div class = "col-md-6">
+```{r echo = FALSE}
+numericInput(inputId = "n3", label = "Enter a number:", value = 10)
+plotOutput(outputId = "log2")
+```
+```{r context = "server"}
+output$log2 <- renderPlot({
+    req(input$n3 > 0)
+    x <- seq(0, input$n3, length = 100)
+    plot(x, log(x))
+})
+```
+</div>
+</div>
+
+### Example 2
+
+<div class = "row">
+<div class = "col-md-8">
+```{r eval = FALSE}
+# ui
+numericInput(inputId = "a", label = "a:", value = 15)
+numericInput(inputId = "b", label = "b:", value = 27)
+textInput(inputId = "fun", label = "f(a, b):", value = "sum")
+textOutput(outputId = "res")
+
+# server
+output$res <- renderText({
+    req(input$a, input$b,
+        exists(input$fun, mode = "function"))
+    fun <- get(input$fun)
+    fun(c(input$a, input$b))
+})
+```
+</div>
+<div class = "col-md-4">
+```{r echo = FALSE}
+numericInput(inputId = "a", label = "a:", value = 15)
+numericInput(inputId = "b", label = "b:", value = 27)
+textInput(inputId = "fun", label = "f(a, b):", value = "sum")
+textOutput(outputId = "res")
+```
+```{r context = "server"}
+output$res <- renderText({
+    req(input$a, input$b, exists(input$fun, mode = "function"))
+    get(input$fun)(c(input$a, input$b))
+})
+```
+</div>
+</div>

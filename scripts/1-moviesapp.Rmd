@@ -1,0 +1,400 @@
+---
+title: "Movies app"
+subtitle: "SIB - Introduction to R Shiny"
+author: "Phil Cheng, Helena L. Crowell"
+date: "May 6th, 2019"
+output: 
+  learnr::tutorial:
+    progressive: true
+    theme: flatly
+runtime: shiny_prerendered
+---
+
+```{r context = "setup", echo = FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+library(ggplot2)
+library(learnr)
+learnr::initialize_tutorial()
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r context = "data"}
+movies <- read.csv(file.path("www", "movies.csv"))
+```
+
+## Heads-up
+
+- each of you received one <span style = "color:red"> red </span> and one <span style = "color:green"> green </span> sticky note
+- stick these on the back of your laptop:
+  - <span style = "color:green"> green </span> when you're **done**
+  - <span style = "color:red"> red </span> when you have **questions** or are **stuck**
+
+### &nbsp;
+
+### &nbsp;
+
+- we'll start with **very simple** tasks  
+  > use your <span style = "color:green"> green </span> sticky  
+  - so you don't get bored
+  - so we don't have to awkwardly ask *"are you done?"* ;^)
+  
+- the tasks will get **very challenging**  
+  > use your <span style = "color:red"> red </span> sticky  
+    - so you don't get bored
+    - so Phil & I can help you out
+
+
+## Data description
+
+- **movies.csv** contains data from a forum,  
+where users collect on-screen body counts for a selection of films,  
+and the characters and actors who appear in these films.
+- To be counted a kill and/or dead body has to be visible on the screen,  
+implied deaths like those in the explosion of the Death Star are not counted.
+- The dataset currently contains counts for 545 films from 1949 through 2013.
+
+## Task 0: Creating an app
+
+<div class = "row">
+<div class = "col-md-10">
+<div style="color:red;font-weight:bold">
+1. Create a Shiny app from scratch by navigating to  
+**File** > **New File** > **Shiny Web App...**  
+(place the file inside the `SIB-Shiny-intro` folder)
+2. Launch the app by opening **app.R** and clicking **Run App**
+3. Close the app by clicking the stop icon
+4. Please remove everything following `ui <-` and `server <-`
+</div>
+</div>
+<div class = "col-md-2">
+<div style="color:black; float:right"> `r icon::fa("clock")` 2:00 </div>
+</div>
+</div>
+
+## Task 1: Loading the data
+
+<div class = "row">
+<div class = "col-md-10">
+<div style="color:red;font-weight:bold">
+1. Set up a `SidebarLayout` with an empty `sidebarPanel`,  
+and a `tableOutput` in its `mainPanel`
+2. Load the data using `read.csv`, and  
+output the `head` of the table with `renderTable`
+</div>
+</div>
+<div class = "col-md-2">
+<div style="color:black; float:right"> `r icon::fa("clock")` 3:00 </div>
+</div>
+</div>
+
+### &nbsp;
+
+### Solution 
+
+```{r echo = TRUE, eval = FALSE}
+# ui
+main <- fluidPage(
+    tableOutput(
+        outputId = "table"))
+fluidPage(
+    sidebarLayout(
+        sidebarPanel = NULL,
+        mainPanel = main))
+
+# server
+movies <- read.csv("movies.csv")
+output$table <- renderTable(head(movies))
+```
+
+```{r}
+div(tableOutput(outputId = "table"), style = "font-size:8pt")
+```
+
+```{r context = "server"}
+output$table <- renderTable(head(movies), striped = TRUE, bordered = TRUE)
+```
+
+## Task 2: Basic plotting
+
+<div class = "row">
+<div class = "col-md-10">
+<div style="color:red;font-weight:bold">
+1. Replace the above `tableOutput` with a `plotOutput`
+2. Render a scatter plot of variables  
+`Body_Count` (x-axis) vs. `IMDB_Rating` (y-axis)
+</div>
+</div>
+<div class = "col-md-2">
+<div style="color:black; float:right"> `r icon::fa("clock")` 4:00 </div>
+</div>
+</div>
+
+### &nbsp;
+
+### Solution 
+
+<div class = "row">
+<div class = "col-md-6">
+```{r echo = TRUE, eval = FALSE}
+# ui
+main <- fluidPage(
+    plotOutput(
+        outputId = "scatter"))
+fluidPage(
+    sidebarLayout(
+        sidebarPanel = NULL,
+        mainPanel = main))
+
+# server
+library(ggplot2)
+output$scatter <- renderPlot({
+    ggplot(movies, aes(
+        x = Body_Count, 
+        y = IMDB_Rating)) +
+    geom_point()
+})
+```
+</div>
+<div class = "col-md-6">
+```{r context = "server"}
+output$scatter1 <- renderPlot({
+    ggplot(movies, aes(x = Body_Count, y = IMDB_Rating)) +
+    geom_point()
+})
+```
+
+```{r}
+plotOutput(outputId = "scatter1")
+```
+</div>
+</div>
+
+## Task 3: Reactive plotting
+
+<div class = "row">
+<div class = "col-md-10">
+<div style="color:red;font-weight:bold">
+1. In the `sidebarPanel`, create 2 `selectInput`s  
+that enable the user to select which variables to plot
+2. Modify `renderPlot` to react to the currently selected variables
+</div>
+</div>
+<div class = "col-md-2">
+<div style="color:black; float:right"> `r icon::fa("clock")` 6:00 </div>
+</div>
+</div>
+
+### &nbsp;
+
+### Solution
+
+<div class = "row">
+<div class = "col-md-6">
+```{r echo = TRUE, eval = FALSE}
+# ui
+sidebarPanel(
+    selectInput(
+        intputId = "xvar", 
+        label = "x-axis:", 
+        choices = names(movies),
+        selected = "Body_Count"),
+    selectInput(
+        intputId = "yvar", 
+        label = "y-axis:", 
+        choices = names(movies),
+        selected = "IMDB_Rating"))
+```
+</div>
+<div class = "col-md-6">
+```{r echo = TRUE, eval = FALSE}
+# server
+output$scatter <- renderPlot({
+    ggplot(movies, aes_string(
+        x = input$xvar, 
+        y = input$yvar)) +
+    geom_point()
+})
+```
+</div>
+</div>
+```{r context = "server"}
+library(ggplot2)
+output$scatter2 <- renderPlot({
+    ggplot(movies, aes_string(x = input$xvar1, y = input$yvar1)) +
+    geom_point()
+})
+```
+<div class = "row">
+<div class = "col-md-4">
+```{r}
+selectInput("xvar1", "x-axis:", names(movies), selected = "Body_Count")
+selectInput("yvar1", "y-axis:", names(movies), selected = "IMDB_Rating")
+```
+</div>
+<div class = "col-md-8">
+```{r}
+plotOutput(outputId = "scatter2")
+```
+</div>
+</div>
+
+## Task 4: Subsetting
+
+<div class = "row">
+<div class = "col-md-10">
+<div style="color:red;font-weight:bold">
+1. Add a `sliderInput` with range [0, 1000]
+2. Modify `renderPlot` to plot only the subset of data  
+for which the `Body_Count` lies in the specified range
+3. Add a `textOutput` that prints the number of points  
+that fall into the current range
+</div>
+</div>
+<div class = "col-md-2">
+<div style="color:black; float:right"> `r icon::fa("clock")` 5:00 </div>
+</div>
+</div>
+
+### &nbsp;
+
+### Solution
+
+<div class = "row">
+<div class = "col-md-6">
+```{r echo = TRUE, eval = FALSE}
+# ui
+main <- mainPanel(
+    fluidPage(
+        sliderInput(
+            inputId = "slider",
+            label = "Range to plot:"
+            min = 0, max = 1000,
+            value = c(0, 100)),
+    plotOutput(outputId = "scatter"),
+    textOutput(outputId = "text")))
+
+# server
+library(dplyr)
+output$scatter <- renderPlot({
+    range <- input$slider
+    subset <- filter(movies,
+        Body_Count >= range[1],
+        Body_Count <= range[2])
+    ggplot(subset, aes_string(
+        x = input$xvar, 
+        y = input$yvar)) +
+        geom_point()
+})
+output$text <- renderText({
+    range <- input$slider
+    subset <- filter(movies,
+        Body_Count >= range[1],
+        Body_Count <= range[2])
+    paste("# movies:", nrow(subset))
+})
+```
+</div>
+<div class = "col-md-6">
+```{r context = "server"}
+output$scatter3 <- renderPlot({
+    range <- input$slider1
+    subset <- filter(movies, 
+        Body_Count >= range[1],
+        Body_Count <= range[2])
+    ggplot(subset, aes_string(
+        x = input$xvar2, 
+        y = input$yvar2)) +
+        geom_point()
+})
+output$text <- renderText({
+    range <- input$slider1
+    subset <- filter(movies, 
+        Body_Count >= range[1],
+        Body_Count <= range[2])
+    paste("# movies:", nrow(subset))
+})
+```
+
+```{r}
+selectInput("xvar2", "x-axis:", names(movies), selected = "Body_Count")
+selectInput("yvar2", "y-axis:", names(movies), selected = "IMDB_Rating")
+sliderInput(
+    inputId = "slider1", 
+    label = "Body_Count range to plot:", 
+    min = 0, max = 1000, value = c(0, 100))
+```
+
+```{r}
+plotOutput(outputId = "scatter3")
+textOutput(outputId = "text")
+```
+</div>
+</div>
+
+## Task 5: Using `reactive`
+
+<div class = "row">
+<div class = "col-md-10">
+<div style="color:red;font-weight:bold">
+1. Create reactive value to store the current subset  
+of the data using `subset <- reactive()`
+2. Modify `renderPlot` and `renderText` to use this reactive value
+</div>
+</div>
+<div class = "col-md-2">
+<div style="color:black; float:right"> `r icon::fa("clock")` 5:00 </div>
+</div>
+</div>
+
+### &nbsp;
+
+### Solution
+
+<div class = "row">
+<div class = "col-md-6">
+```{r echo = TRUE, eval = FALSE}
+# server
+subset <- reactive({
+    range <- input$slider
+    filter(movies,
+        Body_Count >= range[1],
+        Body_Count <= range[2])
+})
+output$scatter <- renderPlot({
+    ggplot(subset(), aes_string(
+        x = input$xvar, 
+        y = input$yvar)) +
+    geom_point()
+})
+output$text <- renderText(
+  paste("# movies:", nrow(subset())))
+```
+</div>
+<div class = "col-md-6">
+```{r context = "server"}
+subset <- reactive({
+    range <- input$slider2
+    filter(movies,
+        Body_Count >= range[1],
+        Body_Count <= range[2])
+})
+output$scatter4 <- renderPlot(
+    ggplot(subset(), aes_string(
+        x = input$xvar3,
+        y = input$yvar3)) +
+        geom_point())
+output$text2 <- renderText(paste("# movies:", nrow(subset())))
+```
+
+```{r}
+selectInput("xvar3", "x-axis:", names(movies), selected = "Body_Count")
+selectInput("yvar3", "y-axis:", names(movies), selected = "IMDB_Rating")
+sliderInput(
+    inputId = "slider2", 
+    label = "Body_Count range to plot:", 
+    min = 0, max = 1000, value = c(0, 100))
+plotOutput(outputId = "scatter4")
+textOutput(outputId = "text2")
+```
+</div>
+</div>

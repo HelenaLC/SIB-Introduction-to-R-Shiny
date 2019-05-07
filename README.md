@@ -50,9 +50,11 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
     - 1st taskset with solutions
 - `2-moreshiny.Rmd`:  
     - more reactivity
-    - `tabsetPanel`s
+    - `tabsetPanel`s  
+
 </div>
-<div class = "col-md-4">
+<div class = "col-md-4">  
+
 - `3-moviesapp.Rmd`:  
     - continuation of movies app
     - 2nd taskset with solutions

@@ -30,6 +30,42 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
 
 - Before lunch time, we will hand out red and green **sticky notes**. Please take a minute to write one positive thing on the green sticky note (e.g., something useful you've learned or something you liked about the teaching-style), and something you found too fast /  too slow / confusing / irrelevant, or questions that haven't yet been answered on the red one.
 
+### Couse material
+
+#### Contents
+
+- **0-introduction**:  
+    - what is Shiny?
+    - app components & organization
+    - basic layouts
+    - input & output widgets
+    - reactivity basics
+- **1-moviesapp**:  
+    - step-by-step app building
+    - 1st taskset with solutions
+- **2-moreshiny**:  
+    - more reactivity
+    - `tabsetPanel`s
+- **3-moviesapp**:  
+    - continuation of movies app
+    - 2nd taskset with solutions
+- **4-conclusion**:  
+    - debugging, Shiny `reactlog`
+    - app sharing & deployment
+    
+#### Instructions
+
+- install required packages via
+
+```
+pkgs <- c("learnr", "shinydashboard", "shinyBS")
+pkgs <- setdiff(pkgs, rownames(installed.packages()))
+if (length(pkgs) != 0) install.packages(pkgs)
+```
+
+- open `.Rmd` in RStudio
+- click on `Run Document`
+
 ***
 
 ## Overview

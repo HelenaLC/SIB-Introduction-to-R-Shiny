@@ -34,25 +34,40 @@ Alternatively, you can download the repository by clicking on **Clone or downloa
 
 #### Contents
 
-- **0-introduction**:  
+`scripts/...`
+
+<div class = "row">
+<div class = "col-md-4">
+- `0-introduction.Rmd`:  
     - what is Shiny?
     - app components & organization
     - basic layouts
     - input & output widgets
     - reactivity basics
-- **1-moviesapp**:  
+- `1-moviesapp.Rmd`:  
     - step-by-step app building
     - 1st taskset with solutions
-- **2-moreshiny**:  
+- `2-moreshiny.Rmd`:  
     - more reactivity
     - `tabsetPanel`s
-- **3-moviesapp**:  
+</div>
+<div class = "col-md-4">
+- `3-moviesapp.Rmd`:  
     - continuation of movies app
     - 2nd taskset with solutions
-- **4-conclusion**:  
+- `4-conclusion.Rmd`:  
     - debugging, Shiny `reactlog`
     - app sharing & deployment
-    
+
+`exercises/...`
+
+- `movies2.1_actionButton.R`,  
+  `movies2.1_tabsetPanel.R`,  
+  `movies2.1_final.R`:  
+    - solutions to app examples from `scripts/2-moreshiny.Rmd`
+</div>
+</div>
+
 #### Instructions
 
 - install required packages via
